@@ -1,0 +1,1 @@
+from .variety_product_repository import VarietyProductRepository
