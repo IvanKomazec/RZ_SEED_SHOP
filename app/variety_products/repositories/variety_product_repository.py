@@ -19,8 +19,8 @@ class VarietyProductRepository:
             return variety_product
         except IntegrityError as e:
             raise e
-        except Exception as e:
-            raise e
+        except Exception as ee:
+            raise ee
 
     def get_all_variety_products(self):
         variety_products = self.db.query(VarietyProduct).all()

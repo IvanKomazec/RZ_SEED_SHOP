@@ -1,1 +1,2 @@
 from .variety_product import VarietyProductController
+from .variety_traits_controller import VarietyTraitsController
