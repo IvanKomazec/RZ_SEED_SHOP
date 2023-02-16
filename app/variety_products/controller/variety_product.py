@@ -99,3 +99,16 @@ class VarietyProductController:
             raise HTTPException(400, "variety with provided id not found")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
+    def update_variety_product_by_id(variety_id: str, name: str, crop: str, price: float, package_size: str,
+                                     stock: int, added_to_inventory: date, on_discount: bool = False):
+        try:
+            variety_product = VarietyProductService.update_variety_product_by_id(variety_id, name, crop, price,
+                                                                                 package_size, stock, added_to_inventory,
+                                                                                 on_discount)
+            return variety_product
+        except VarietyNotFoundException:
+            raise HTTPException(400, "variety with provided id not found")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))

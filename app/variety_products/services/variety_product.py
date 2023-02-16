@@ -86,7 +86,7 @@ class VarietyProductService:
                 variety_product_repository = VarietyProductRepository(db)
                 new_varieties = variety_product_repository.get_all_new_variety_products()
                 if not new_varieties:
-                    raise NoNewVarietiesException("No new varieties at this point","400")
+                    raise NoNewVarietiesException("No new varieties at this point", 400)
                 return new_varieties
         except Exception as e:
             raise e
@@ -98,7 +98,7 @@ class VarietyProductService:
                 variety_product_repository = VarietyProductRepository(db)
                 discount_varieties = variety_product_repository.get_variety_products_on_discount()
                 if not discount_varieties:
-                    raise NoDiscountVarietiesException("No discount varieties at this point","400")
+                    raise NoDiscountVarietiesException("No discount varieties at this point", 400)
                 return discount_varieties
         except Exception as e:
             raise e
@@ -115,4 +115,18 @@ class VarietyProductService:
         except Exception as e:
             raise e
 
-
+    @staticmethod
+    def update_variety_product_by_id(variety_id: str, name: str, crop: str, price: float, package_size: str,
+                                     stock: int, added_to_inventory: date, on_discount: bool = False):
+        try:
+            with SessionLocal() as db:
+                variety_product_repository = VarietyProductRepository(db)
+                variety_product = variety_product_repository.update_variety_product_by_id(variety_id, name, crop, price,
+                                                                                          package_size, stock,
+                                                                                          added_to_inventory,
+                                                                                          on_discount)
+                return variety_product
+        except VarietyNotFoundException as e:
+            raise e
+        except Exception as ee:
+            raise ee

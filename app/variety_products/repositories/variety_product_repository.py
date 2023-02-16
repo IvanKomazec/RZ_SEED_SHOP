@@ -84,10 +84,37 @@ class VarietyProductRepository:
         try:
             variety_product = self.db.query(VarietyProduct).filter(VarietyProduct.id == variety_id).first()
             if variety_product is None:
-                raise VarietyNotFoundException(f"Variety with provided name: {variety_id} not found.", 400)
+                raise VarietyNotFoundException(f"Variety with provided id: {variety_id} not found.", 400)
             self.db.delete(variety_product)
             self.db.commit()
             return True
+        except DatabaseError as e:
+            raise e
+        except InterfaceError as ee:
+            raise ee
+
+    def update_variety_product_by_id(self, variety_id: str, name: str, crop: str, price: float, package_size: str,
+                                     stock: int, added_to_inventory: date, on_discount: bool = False):
+        try:
+            variety_product = self.db.query(VarietyProduct).filter(VarietyProduct.id == variety_id).first()
+            if variety_product is None:
+                raise VarietyNotFoundException(f"Variety with provided id: {variety_id} not found.", 400)
+            if name is not None:
+                variety_product.name = name
+            if crop is not None:
+                variety_product.crop = crop
+            if price is not None:
+                variety_product.price = price
+            if package_size is not None:
+                variety_product.package_size = package_size
+            if stock is not None:
+                variety_product.stock = stock
+            variety_product.added_to_inventory = added_to_inventory
+            variety_product.on_discount = on_discount
+            self.db.add(variety_product)
+            self.db.commit()
+            self.db.refresh(variety_product)
+            return variety_product
         except DatabaseError as e:
             raise e
         except InterfaceError as ee:
