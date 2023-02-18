@@ -119,3 +119,7 @@ class VarietyProductRepository:
             raise e
         except InterfaceError as ee:
             raise ee
+
+    def get_product_price_by_id(self, variety_product_id):
+        variety_product = self.db.query(VarietyProduct).filter(VarietyProduct.id == variety_product_id).first()
+        return variety_product.price

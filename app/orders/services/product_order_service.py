@@ -63,11 +63,16 @@ class ProductOrderService:
             raise e
 
     @staticmethod
-    def update_product_order_quantity_by_id(product_order_id: str, quantity: int):
+    def update_product_order_quantity_by_id(product_order_id: str, quantity: int, variety_id: str):
         try:
             with SessionLocal() as db:
+                variety_product_repository = VarietyProductRepository(db)
+                variety_product = variety_product_repository.get_variety_product_by_id(variety_id)
                 product_order_repository = ProductOrderRepository(db)
                 product_order = product_order_repository.update_product_order_quantity_by_id(product_order_id, quantity)
+                if product_order.quantity > variety_product.stock:
+                    raise VarietyOutOfStockException(f"only {variety_product.stock} {variety_product.name} with the "
+                                                     f"package size of {variety_product.package_size} available", 400)
                 if product_order is None:
                     raise ProductOrderNotFoundException("provided id not found", 400)
                 return product_order

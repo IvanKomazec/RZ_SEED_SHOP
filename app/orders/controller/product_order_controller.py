@@ -52,10 +52,13 @@ class ProductOrderController:
             raise HTTPException(500, str(e))
 
     @staticmethod
-    def update_product_order_quantity_by_id(product_order_id: str, quantity: int):
+    def update_product_order_quantity_by_id(product_order_id: str, quantity: int, variety_id: str):
         try:
-            product_order = ProductOrderService.update_product_order_quantity_by_id(product_order_id, quantity)
+            product_order = ProductOrderService.update_product_order_quantity_by_id(product_order_id, quantity,
+                                                                                    variety_id)
             return product_order
+        except VarietyOutOfStockException:
+            raise HTTPException(status_code=400, detail="not enough variety on stock at this point")
         except AttributeError:
             raise HTTPException(400, "product_order with provided id not found")
         except ProductOrderNotFoundException:

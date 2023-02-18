@@ -4,7 +4,7 @@ from fastapi import HTTPException, Response
 from sqlalchemy.exc import IntegrityError
 from app.users.user_exceptions import IdNotFoundException
 
-from app.orders.services import CartService
+from app.orders.services import CartService, ProductOrderService
 
 
 class CartController:
@@ -65,3 +65,18 @@ class CartController:
         except Exception as e:
             raise HTTPException(500, str(e))
 
+    @staticmethod
+    def get_cart_with_list_of_product_orders(cart_id: str):
+        try:
+            cart = CartService.get_cart_by_id(cart_id)
+        except Exception:
+            raise HTTPException(400, "Cart with provided ID NOT found")
+        try:
+            product_orders = ProductOrderService.get_all_product_orders_by_cart_id(cart_id)
+            product_orders_list = []
+            for product in product_orders:
+                product_orders_list.append(ProductOrderService.get_product_order_by_id(product.id))
+            cart.product_orders = product_orders_list
+            return cart
+        except Exception as e:
+            raise HTTPException(500, str(e))
