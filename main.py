@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from app.db.database import engine, Base
 from app.users.routes import user_router, customer_router, admin_router
 from app.variety_products.routes import variety_products_router, variety_traits_router
-
+from app.orders.routes import order_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -16,6 +16,7 @@ def init_app():
     app.include_router(variety_products_router)
     app.include_router(admin_router)
     app.include_router(variety_traits_router)
+    app.include_router(order_router)
     return app
 
 
