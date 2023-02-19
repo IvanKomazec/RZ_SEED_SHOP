@@ -1,8 +1,6 @@
 from datetime import date
 from app.orders.exceptions import *
 from fastapi import HTTPException, Response
-from sqlalchemy.exc import IntegrityError
-from app.users.user_exceptions import IdNotFoundException
 
 from app.orders.services import CartService, ProductOrderService
 
@@ -10,12 +8,10 @@ from app.orders.services import CartService, ProductOrderService
 class CartController:
 
     @staticmethod
-    def create_cart(created_at: date.today(), customer_id: str, status: str = "pending"):
+    def create_cart(created_at: date.today(), status: str = "pending"):
         try:
-            cart = CartService.create_cart(created_at, customer_id, status)
+            cart = CartService.create_cart(created_at, status)
             return cart
-        except IdNotFoundException:
-            raise HTTPException(400, "Customer with provided ID not in DB")
         except CartCreationDateInvalidException:
             raise HTTPException(400, "Cart 'created_at' date not valid")
         # except IntegrityError:

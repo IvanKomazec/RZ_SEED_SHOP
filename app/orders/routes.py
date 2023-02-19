@@ -10,7 +10,7 @@ order_router = APIRouter(prefix="/api/orders", tags=["Orders"])
 
 @order_router.post("/create-cart", response_model=CartSchema)
 def create_cart(cart: CartSchemaIn):
-    return CartController.create_cart(created_at=cart.created_at, status=cart.status, customer_id=cart.customer_id)
+    return CartController.create_cart(created_at=cart.created_at, status=cart.status)
 
 
 @order_router.get("/get-all-carts", response_model=list[CartSchema])
@@ -77,3 +77,31 @@ def create_completed_order(completed_order: CompletedOrderSchemaIn):
                                                            order_value=completed_order.order_value,
                                                            discount=completed_order.discount,
                                                            status=completed_order.status)
+
+
+@order_router.get("/get-all-completed-orders", response_model=list[CompletedOrderSchema])
+def get_all_completed_orders():
+    return CompletedOrderController.get_all_completed_orders()
+
+
+@order_router.get("/get-all-completed-orders-by-status", response_model=list[CompletedOrderSchema])
+def get_all_completed_orders_by_status(status: str):
+    return CompletedOrderController.get_all_completed_orders_by_status(status)
+
+
+@order_router.get("/get-all-completed-orders-in-specified-period-by-status", response_model=list[CompletedOrderSchema])
+def get_all_completed_orders_in_specified_period_by_status(status: str, sy: int, sm: int, sd: int, ey: int,
+                                                           em: int, ed: int):
+    return CompletedOrderController.get_all_completed_orders_in_specified_period_by_status(status, sy, sm, sd, ey, em,
+                                                                                           ed)
+
+
+@order_router.get("/get-total-sales-for-specified-period")
+def get_total_sales_amount_for_specified_period_by_status(status: str, sy: int, sm: int, sd: int, ey: int, em: int, ed: int):
+    return CompletedOrderController.get_total_sales_amount_for_specified_period_by_status(status, sy, sm, sd, ey, em,
+                                                                                          ed)
+
+
+@order_router.get("/get-product-orders-for-specified-period")
+def get_product_orders_for_specified_period(status: str, sy: int, sm: int, sd: int, ey: int, em: int, ed: int):
+    return CompletedOrderController.get_product_orders_for_specified_period(status, sy, sm, sd, ey, em, ed)

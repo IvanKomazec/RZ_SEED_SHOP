@@ -22,7 +22,8 @@ class CompletedOrderSchemaIn(BaseModel):
     order_date: date
     order_value: float
     discount: bool = False
-    status: str
+    status: str = "pending"
 
     class Config:
         orm_mode = True
+

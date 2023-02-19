@@ -1,27 +1,20 @@
 from datetime import date
-from app.orders.repositories import CartRepository, ProductOrderRepository
+from app.orders.repositories import CartRepository
 from app.db import SessionLocal
 from app.orders.exceptions import *
-from app.users.repository import CustomerRepository
-from app.users.user_exceptions import IdNotFoundException
 
 
 class CartService:
 
     @staticmethod
-    def create_cart(created_at: date.today(), customer_id: str, status: str = "pending"):
+    def create_cart(created_at: date.today(), status: str = "pending"):
         try:
             with SessionLocal() as db:
-                customer_repository = CustomerRepository(db)
-                customer = customer_repository.get_customer_by_id(customer_id)
-                if customer is None:
-                    raise IdNotFoundException("Customer with provided ID not in DB", 400)
                 cart_repository = CartRepository(db)
-                cart = cart_repository.create_cart(created_at, customer_id, status)
+                cart = cart_repository.create_cart(created_at, status)
                 if cart.created_at > date.today():
-                    raise CartCreationDateInvalidException("Cart 'created_at' date not valid", 400)
+                    raise CartCreationDateInvalidException("date not valid", 400)
                 return cart
-
         except Exception as e:
             raise e
 
@@ -67,5 +60,3 @@ class CartService:
                     return True
         except Exception as e:
             raise e
-
-

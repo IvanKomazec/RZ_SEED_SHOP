@@ -123,3 +123,10 @@ class VarietyProductRepository:
     def get_product_price_by_id(self, variety_product_id):
         variety_product = self.db.query(VarietyProduct).filter(VarietyProduct.id == variety_product_id).first()
         return variety_product.price
+
+    def get_variety_name_by_id(self, variety_id):
+        try:
+            variety_product = self.db.query(VarietyProduct).filter(VarietyProduct.id == variety_id).first()
+            return variety_product.name
+        except DatabaseError as e:
+            raise e

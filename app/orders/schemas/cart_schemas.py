@@ -7,7 +7,6 @@ class CartSchema(BaseModel):
     id: UUID4
     created_at: date
     status: str
-    customer_id: str
 
     class Config:
         orm_mode = True
@@ -16,7 +15,6 @@ class CartSchema(BaseModel):
 class CartSchemaIn(BaseModel):
     created_at: date
     status: str = "pending"
-    customer_id: str
 
     class Config:
         orm_mode = True
@@ -36,7 +34,6 @@ class CartWithProductsSchema(BaseModel):
     id: UUID4
     created_at: date
     status: str
-    customer_id: str
     product_orders: list[ProductOrderSchemaTest]
 
     class Config:

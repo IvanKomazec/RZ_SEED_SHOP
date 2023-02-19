@@ -10,9 +10,9 @@ class CartRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create_cart(self, created_at: date.today(), customer_id: str, status: str = "pending"):
+    def create_cart(self, created_at: date.today(), status: str = "pending"):
         try:
-            cart = Cart(created_at, customer_id, status)
+            cart = Cart(created_at, status)
             self.db.add(cart)
             self.db.commit()
             self.db.refresh(cart)
@@ -62,6 +62,3 @@ class CartRepository:
             raise e
         except InterfaceError as ee:
             raise ee
-
-
-
