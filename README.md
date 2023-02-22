@@ -2,6 +2,10 @@
 
 FastApi backend for managing a vegetable seeds web-shop. REST-ful backend with swagger document endpoints. MySQL database management system has been used for persistence.
 
+ER diagram:
+![Database ER diagram (crow's foot)_seed_shop.jpeg](..%2F..%2FDownloads%2FDatabase%20ER%20diagram%20%28crow%27s%20foot%29_seed_shop.jpeg)
+
+
 ## Installation
 
 ### Create virtual environment
