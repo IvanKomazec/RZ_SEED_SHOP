@@ -68,8 +68,12 @@ class ProductOrderService:
             with SessionLocal() as db:
                 variety_product_repository = VarietyProductRepository(db)
                 variety_product = variety_product_repository.get_variety_product_by_id(variety_id)
+                if variety_product is None:
+                    raise VarietyIdNotFoundException("Variety id with provided id not found", 400)
                 product_order_repository = ProductOrderRepository(db)
-                product_order = product_order_repository.update_product_order_quantity_by_id(product_order_id, quantity)
+                product_order = product_order_repository.update_product_order_quantity_by_id(product_order_id, quantity,
+                                                                                             variety_id)
+
                 if product_order.quantity > variety_product.stock:
                     raise VarietyOutOfStockException(f"only {variety_product.stock} {variety_product.name} with the "
                                                      f"package size of {variety_product.package_size} available", 400)

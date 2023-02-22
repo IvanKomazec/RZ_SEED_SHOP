@@ -1,4 +1,4 @@
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, InterfaceError, DatabaseError
 from sqlalchemy.orm import Session
 
 from app.users.models import Admin
@@ -19,6 +19,8 @@ class AdminRepository:
             return admin
         except IntegrityError as e:
             raise e
+        except InterfaceError as ee:
+            raise ee
 
     def get_all_admins(self):
         all_admins = self.db.query(Admin).all()
@@ -34,8 +36,10 @@ class AdminRepository:
             if admin is None:
                 raise LastNameNotFoundException("provided last name not in DB", 400)
             return admin
-        except Exception as e:
+        except DatabaseError as e:
             raise e
+        except InterfaceError as ee:
+            raise ee
 
     def delete_admin_by_id(self, admin_id):
         try:
@@ -45,6 +49,8 @@ class AdminRepository:
             self.db.delete(admin)
             self.db.commit()
             return True
-        except Exception as e:
+        except DatabaseError as e:
             raise e
+        except InterfaceError as ee:
+            raise ee
         

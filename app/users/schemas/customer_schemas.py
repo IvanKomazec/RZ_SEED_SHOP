@@ -41,3 +41,17 @@ class CustomerSchemaOut(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class CustomerSchemaUpdate(BaseModel):
+    id: str
+    name: str
+    last_name: str
+    address: str
+    district: str
+    telephone_number: str
+    key_customer: bool
+    newsletter_subscription: bool
+
+    class Config:
+        orm_mode = True

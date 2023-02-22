@@ -1,8 +1,8 @@
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DatabaseError, InterfaceError
 from sqlalchemy.orm import Session
 
 from app.users.models import Customer
-from app.users.user_exceptions import IdNotFoundException, LastNameNotFoundException, UserIdAlreadyInUseException
+from app.users.user_exceptions import IdNotFoundException, LastNameNotFoundException
 
 
 class CustomerRepository:
@@ -17,9 +17,10 @@ class CustomerRepository:
             self.db.commit()
             self.db.refresh(customer)
             return customer
-
         except IntegrityError as e:
             raise e
+        except InterfaceError as ee:
+            raise ee
 
     def get_customer_by_id(self, customer_id: str):
         customer = self.db.query(Customer).filter(Customer.id == customer_id).first()
@@ -32,7 +33,6 @@ class CustomerRepository:
     #     if customer is not None:
     #         raise UserIdAlreadyInUseException(f"Provided user ID: {user_id} not found.", 400)
     #     return customer
-
 
     def get_customer_by_partial_last_name(self, partial_last_name: str):
         customer = self.db.query(Customer).filter(Customer.name.like(partial_last_name + "%")).all()
@@ -49,7 +49,6 @@ class CustomerRepository:
         try:
             customer = self.db.query(Customer).filter(Customer.id == customer_id).first()
             # if customer is None:
-            #     print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
             #     raise IdNotFoundException(f"provided ID: {customer_id} not found.", 400)
         # if name is not None:
             customer.name = name
@@ -69,8 +68,10 @@ class CustomerRepository:
             self.db.commit()
             self.db.refresh(customer)
             return customer
-        except Exception as e:
-            return e
+        except DatabaseError as e:
+            raise e
+        except InterfaceError as ee:
+            raise ee
 
     def delete_customer_by_id(self, customer_id: str):
         try:
@@ -80,5 +81,7 @@ class CustomerRepository:
             self.db.delete(customer)
             self.db.commit()
             return True
-        except Exception as e:
+        except DatabaseError as e:
             raise e
+        except InterfaceError as ee:
+            raise ee

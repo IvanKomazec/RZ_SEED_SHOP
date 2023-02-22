@@ -38,10 +38,11 @@ class ProductOrderRepository:
         all_product_orders = self.db.query(ProductOrder).filter(ProductOrder.cart_id == cart_id).all()
         return all_product_orders
 
-    def update_product_order_quantity_by_id(self, product_order_id: str, quantity: int):
+    def update_product_order_quantity_by_id(self, product_order_id: str, quantity: int, variety_id):
         try:
             product_order = self.db.query(ProductOrder).filter(ProductOrder.id == product_order_id).first()
             product_order.quantity = quantity
+            product_order.variety_id = variety_id
             self.db.commit()
             self.db.refresh(product_order)
             return product_order

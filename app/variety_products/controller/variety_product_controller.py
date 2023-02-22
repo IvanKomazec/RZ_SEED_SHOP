@@ -1,5 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 
+from app.variety_products.exceptions.variety_product_exceptions import InvalidDateInputException, MatchNotFoundException
 from app.variety_products.services import VarietyProductService
 from app.variety_products.exceptions import *
 from datetime import date
@@ -17,6 +18,8 @@ class VarietyProductController:
             return variety_product
         except IntegrityError:
             raise HTTPException(status_code=400, detail="variety already in DB")
+        except InvalidDateInputException:
+            raise HTTPException(status_code=400, detail="Invalid date for 'added to inventory' input")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -112,3 +115,22 @@ class VarietyProductController:
             raise HTTPException(400, "variety with provided id not found")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
+
+
+    @staticmethod
+    def filter_by_variety_traits(fruit_size_g: int, maturity_days: int, open_field: bool,
+                                 indoor: bool, fresh_market: bool, industry: bool, spring_production: bool,
+                                 summer_production: bool, autumn_production: bool, winter_production: bool):
+        try:
+            filtered_varieties = VarietyProductService.filter_by_variety_traits(fruit_size_g, maturity_days,
+                                                                                open_field, indoor,
+                                                                                fresh_market, industry,
+                                                                                spring_production,
+                                                                                summer_production,
+                                                                                autumn_production,
+                                                                                winter_production)
+            return filtered_varieties
+        except MatchNotFoundException:
+            raise HTTPException(400, "Product with provided criteria not found")
+        except Exception as e:
+            raise HTTPException(500, str(e))

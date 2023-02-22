@@ -1,5 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 from app.db import SessionLocal
+from app.variety_products.exceptions.variety_product_exceptions import InvalidDateInputException, MatchNotFoundException
 from app.variety_products.repositories import VarietyProductRepository
 from app.variety_products.exceptions import *
 from datetime import date
@@ -15,6 +16,8 @@ class VarietyProductService:
                 variety_product_repository = VarietyProductRepository(db)
                 variety_product = variety_product_repository.create_product(name, crop, price, package_size, stock,
                                                                             added_to_inventory, on_discount)
+                if variety_product.added_to_inventory > date.today():
+                    raise InvalidDateInputException("Invalid date for 'added to inventory' input", 400)
                 return variety_product
         except IntegrityError:
             raise VarietyAlreadyInDatabaseException("Variety with provided ID already in DB", 400)
@@ -130,3 +133,23 @@ class VarietyProductService:
             raise e
         except Exception as ee:
             raise ee
+
+    @staticmethod
+    def filter_by_variety_traits(fruit_size_g: int, maturity_days: int, open_field: bool,
+                                 indoor: bool, fresh_market: bool, industry: bool, spring_production: bool,
+                                 summer_production: bool, autumn_production: bool, winter_production: bool):
+        try:
+            with SessionLocal() as db:
+                variety_product_repository = VarietyProductRepository(db)
+                filtered_varieties = variety_product_repository.filter_by_variety_traits(fruit_size_g, maturity_days,
+                                                                                         open_field, indoor,
+                                                                                         fresh_market, industry,
+                                                                                         spring_production,
+                                                                                         summer_production,
+                                                                                         autumn_production,
+                                                                                         winter_production)
+                if len(filtered_varieties) == 0:
+                    raise MatchNotFoundException("No varieties match the criteria", 400)
+                return filtered_varieties
+        except Exception as e:
+            raise e

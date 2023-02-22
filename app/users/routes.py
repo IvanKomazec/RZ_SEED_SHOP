@@ -2,7 +2,8 @@ from fastapi import APIRouter
 from app.users.controller import UserController
 from app.users.controller.customer_controller import CustomerController
 from app.users.controller.admin_controller import AdminController
-from app.users.schemas import UserSchema, UserSchemaIn, CustomerSchema, CustomerSchemaIn, AdminSchema, AdminSchemaIn
+from app.users.schemas import UserSchema, UserSchemaIn, CustomerSchema, CustomerSchemaIn, AdminSchema, AdminSchemaIn, \
+    UserSchemaUpdate, CustomerSchemaUpdate
 
 user_router = APIRouter(prefix="/api/users", tags=["Users"])
 
@@ -28,11 +29,12 @@ def delete_user_by_id(user_id: str):
 
 
 @user_router.put("/update/is_active", response_model=UserSchema)
-def update_user(user_id: str, is_active: bool):
-    return UserController.update_user_is_active(user_id, is_active)
+def update_user(user: UserSchemaUpdate):
+    return UserController.update_user_is_active(user_id=user.id, is_active=user.is_active)
 
 
 customer_router = APIRouter(prefix="/api/customer", tags=["Customers"])
+
 
 @customer_router.post("/create-new-customer", response_model=CustomerSchema)
 def create_customer(customer: CustomerSchemaIn):
@@ -44,41 +46,56 @@ def create_customer(customer: CustomerSchemaIn):
 def get_all_customers():
     return CustomerController.get_all_customers()
 
+
 @customer_router.get("/get-customer-by-id", response_model=CustomerSchema)
 def get_customer_by_id(customer_id: str):
     return CustomerController.get_customer_by_id(customer_id)
+
 
 @customer_router.get("/get-customer-by_partial_last_name", response_model=list[CustomerSchema])
 def get_customer_by_partial_last_name(partial_last_name: str):
     return CustomerController.get_customer_by_partial_last_name(partial_last_name)
 
+
 @customer_router.delete("/delete-user-by-id")
 def delete_user_by_id(customer_id: str):
     return CustomerController.delete_customer_by_id(customer_id)
 
+
 @customer_router.put("/update-customer", response_model=CustomerSchema)
-def update_customer(customer_id: str, name: str, last_name: str, address: str, district: str,
-                    telephone_number: str, key_customer: bool = False, newsletter_subscription: bool = False):
-    return CustomerController.update_customer(customer_id, name, last_name, address, district,
-                                              telephone_number, key_customer, newsletter_subscription)
+def update_customer(customer: CustomerSchemaUpdate):
+    return CustomerController.update_customer(customer_id=customer.id,
+                                              name=customer.name,
+                                              last_name=customer.last_name,
+                                              address=customer.address,
+                                              district=customer.district,
+                                              telephone_number=customer.telephone_number,
+                                              key_customer=customer.key_customer,
+                                              newsletter_subscription=customer.newsletter_subscription)
+
 
 admin_router = APIRouter(prefix="/api/admins", tags=["Admins"])
+
 
 @admin_router.post("/add-new-admin", response_model=AdminSchema)
 def create_admin(admin: AdminSchemaIn):
     return AdminController.create_admin(admin.name, admin.last_name, admin.user_id)
 
+
 @admin_router.get("/get-user-by-id", response_model=AdminSchema)
 def get_admin_by_id(admin_id: str):
     return AdminController.get_admin_by_id(admin_id)
+
 
 @admin_router.get("/get-all-admins", response_model=list[AdminSchema])
 def get_all_admins():
     return AdminController.get_all_admins()
 
+
 @admin_router.get("/get-admin-by-partial-last-name", response_model=list[AdminSchema])
 def get_admin_by_partial_last_name(partial_last_name: str):
     return AdminController.get_admin_by_partial_last_name(partial_last_name)
+
 
 @admin_router.delete("/delete-admin-by-id")
 def delete_admin_by_id(admin_id: str):

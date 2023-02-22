@@ -58,11 +58,13 @@ class ProductOrderController:
                                                                                     variety_id)
             return product_order
         except VarietyOutOfStockException:
-            raise HTTPException(status_code=400, detail="not enough variety on stock at this point")
+            raise HTTPException(status_code=400, detail="not enough variety on stock at this moment")
         except AttributeError:
             raise HTTPException(400, "product_order with provided id not found")
         except ProductOrderNotFoundException:
             raise HTTPException(400, "product_order with provided id not found")
+        except VarietyIdNotFoundException:
+            raise HTTPException(400, "Variety id with provided id not found")
         except Exception as e:
             raise HTTPException(500, str(e))
 

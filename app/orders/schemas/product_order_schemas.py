@@ -18,3 +18,12 @@ class ProductOrderSchemaIn(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ProductOrderSchemaUpdate(BaseModel):
+    id: str
+    quantity: int
+    variety_id: str
+
+    class Config:
+        orm_mode = True

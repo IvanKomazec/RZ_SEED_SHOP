@@ -11,7 +11,8 @@ class AdminService:
             with SessionLocal() as db:
                 user_repository = UserRepository(db)
                 if user_repository.get_user_by_id(user_id) is None:
-                    raise IdNotFoundException("Provided user id not in DB")
+                    raise IdNotFoundException("Provided user id not in DB", 400)
+                user_repository.update_user_is_superuser(user_id, True)
                 admin_repository = AdminRepository(db)
                 return admin_repository.create_admin(name, last_name, user_id)
         except Exception as e:

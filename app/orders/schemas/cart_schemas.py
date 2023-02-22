@@ -20,6 +20,13 @@ class CartSchemaIn(BaseModel):
         orm_mode = True
 
 
+class CartSchemaUpdate(BaseModel):
+    id: str
+
+    class Config:
+        orm_mode = True
+
+
 class ProductOrderSchemaTest(BaseModel):
     id: UUID4
     quantity: int

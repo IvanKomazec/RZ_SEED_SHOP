@@ -1,6 +1,6 @@
-# ITBC FastAPI project
+# RZ SEED SHOP
 
-Description pending
+FastApi backend for managing a vegetable seeds web-shop. REST-ful backend with swagger document endpoints. MySQL database management system has been used for persistence.
 
 ## Installation
 

@@ -1,4 +1,5 @@
-from app.variety_products.models import VarietyProduct
+from app.variety_products.exceptions.variety_product_exceptions import InvalidDateInputException
+from app.variety_products.models import VarietyProduct, VarietyTraits
 from app.variety_products.exceptions import *
 from sqlalchemy.exc import IntegrityError, DatabaseError, InterfaceError
 from sqlalchemy.orm import Session
@@ -13,6 +14,8 @@ class VarietyProductRepository:
                        added_to_inventory: date = date.today(), on_discount=False):
         try:
             variety_product = VarietyProduct(name, crop, price, package_size, stock, added_to_inventory, on_discount)
+            if variety_product.added_to_inventory > date.today():
+                raise InvalidDateInputException("Invalid date for 'added to inventory' input", 400)
             self.db.add(variety_product)
             self.db.commit()
             self.db.refresh(variety_product)
@@ -130,3 +133,30 @@ class VarietyProductRepository:
             return variety_product.name
         except DatabaseError as e:
             raise e
+
+    def update_stock(self, variety_id: str, quantity: int):
+        variety_product = self.db.query(VarietyProduct).filter(VarietyProduct.id == variety_id).first()
+        variety_product.stock = variety_product.stock - quantity
+        return variety_product
+
+    def filter_by_variety_traits(self, fruit_size_g: int, maturity_days: int, open_field: bool,
+                                 indoor: bool, fresh_market: bool, industry: bool, spring_production: bool,
+                                 summer_production: bool, autumn_production: bool, winter_production: bool):
+        try:
+            varieties = self.db.query(VarietyProduct).join(VarietyTraits).\
+                filter(VarietyProduct.id == VarietyTraits.product_id).\
+                filter(VarietyTraits.fruit_size_g.between(fruit_size_g-25, fruit_size_g+25)).\
+                filter(VarietyTraits.maturity_days.between(maturity_days-5, maturity_days+5)).\
+                filter(VarietyTraits.open_field == open_field).\
+                filter(VarietyTraits.indoor == indoor).\
+                filter(VarietyTraits.fresh_market == fresh_market).\
+                filter(VarietyTraits.industry == industry).\
+                filter(VarietyTraits.spring_production == spring_production).\
+                filter(VarietyTraits.summer_production == summer_production).\
+                filter(VarietyTraits.autumn_production == autumn_production).\
+                filter(VarietyTraits.winter_production == winter_production).all()
+            return varieties
+        except DatabaseError as e:
+            raise e
+        except InterfaceError as ee:
+            raise ee
