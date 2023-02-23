@@ -32,11 +32,21 @@ class UserRepository:
         except InterfaceError as ee:
             raise ee
 
+    def create_super_user(self, email, password):
+        try:
+            user = User(email=email, password=password, is_superuser=True)
+            self.db.add(user)
+            self.db.commit()
+            self.db.refresh(user)
+            return user
+        except IntegrityError as e:
+            raise e
+
     def get_all_users(self):
         users = self.db.query(User).all()
         return users
 
-    def delete_user_by_id(self, user_id:str):
+    def delete_user_by_id(self, user_id: str):
         try:
             user = self.db.query(User).filter(User.id == user_id).first()
             if user is None:
