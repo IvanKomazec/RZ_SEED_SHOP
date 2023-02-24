@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `rz_seed_shop` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `rz_seed_shop`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: localhost    Database: rz_seed_shop
@@ -245,7 +243,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('85ca074b-8d9f-4543-ac21-c4c957df4c0c','user@example1.com','string1',1,1),('39e51a04-f29f-4a2c-9caa-8ee941a7416e','user@example2.com','string2',1,0),('5b10ed3a-080a-40b7-bb92-8e9f59075e5e','user@example3.com','string3',1,0),('d6d8420d-ad6b-41f2-8db8-a863ba37d426','user@example4.com','string4',1,0),('34f9577b-09c0-4212-9566-bfb5dbec45aa','user@example5.com','string5',1,0),('70840685-bc6b-4323-9f96-500565f72a0f','user@example6.com','string6',1,0);
+INSERT INTO `users` VALUES ('85ca074b-8d9f-4543-ac21-c4c957df4c0c','user@example1.com','string1',1,1),('39e51a04-f29f-4a2c-9caa-8ee941a7416e','user@example2.com','string2',1,0),('5b10ed3a-080a-40b7-bb92-8e9f59075e5e','user@example3.com','string3',1,0),('d6d8420d-ad6b-41f2-8db8-a863ba37d426','user@example4.com','string4',1,0),('34f9577b-09c0-4212-9566-bfb5dbec45aa','user@example5.com','string5',1,0),('70840685-bc6b-4323-9f96-500565f72a0f','user@example6.com','string6',1,0),('5e571e48-d2aa-4f20-a481-6eac69faee80','user@example7.com','21fe2661d69070a6c82eca1cf69d5b8a7b87187ebb30addda82c7e9ac25abfd8',1,1),('aecb1b4a-cea0-4288-8481-4ffc2774ddd6','user@example11.com','899d8c5f546e1b096244fe7a01206c41ed15aeadc8b2750a934aef05d2f2c004',1,1),('40838267-244e-480b-9b9d-3e503c0ec8da','user@example22.com','8ba4d00687fa2063428d22495e140f8dda4aec0a043e45106b8a1915fb1e6a13',1,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -327,4 +325,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-22 16:59:22
+-- Dump completed on 2023-02-24 12:35:17
